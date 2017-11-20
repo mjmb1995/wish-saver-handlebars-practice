@@ -1,0 +1,25 @@
+{
+  "name": "wish-saver-handlebars-practice",
+  "version": "1.0.0",
+  "description": "learning handlebars",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mjmb1995/wish-saver-handlebars-practice.git"
+  },
+  "author": "Mark Bihag",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mjmb1995/wish-saver-handlebars-practice/issues"
+  },
+  "homepage": "https://github.com/mjmb1995/wish-saver-handlebars-practice#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "mysql": "^2.15.0"
+  }
+}
