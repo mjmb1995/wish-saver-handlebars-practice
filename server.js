@@ -20,7 +20,7 @@ var connection = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "TsUbAsA330",
-  database: "task_saver_db"
+  database: "wishes_db"
 });
 
 connection.connect(function(err) {
@@ -42,11 +42,7 @@ app.get("/", function(req, res) {
 });
 
 app.post("/", function(req, res) {
-
-  console.log('req.body')
-  console.log(req.body)
-
-  connection.query("INSERT INTO wishes (wish) VALUES (?)", [req.body.wish], function(err, result) {
+  connection.query("INSERT INTO wishes (wish) VALUES (?)", [req.body.wishes], function(err, result) {
     if (err) throw err;
 
     res.redirect("/");
