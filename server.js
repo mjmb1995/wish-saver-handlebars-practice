@@ -35,7 +35,9 @@ connection.connect(function(err) {
 // routes go here
 app.get("/", function(req, res) {
   connection.query("SELECT * FROM wishes;", function(err, data) {
-    if (err) throw err;
+    if (err) {
+    	return res.status(500).end();
+    };
 
     res.render("wishes-index", { wishes: data });
   });
@@ -43,11 +45,48 @@ app.get("/", function(req, res) {
 
 app.post("/", function(req, res) {
   connection.query("INSERT INTO wishes (wish) VALUES (?)", [req.body.wishes], function(err, result) {
-    if (err) throw err;
+    if (err) {
+    	return res.status(500).end();
+    };
 
     res.redirect("/");
   });
 });
+
+
+// Update a wish
+app.put("/:id", function(req, res) {
+  connection.query("UPDATE wishes SET wish = ? WHERE id = ?", [req.body.wishes, req.params.id], function(err, result) {
+    if (err) {
+      // If an error occurred, send a generic server faliure
+      return res.status(500).end();
+    } else if (result.changedRows == 0) {
+      // If no rows were changed, then the ID must not exist, so 404
+      return res.status(404).end();
+    } else {
+      res.status(200).end();
+    }
+  });
+});
+
+
+// Delete a todo
+app.delete("/:id", function(req, res) {
+  connection.query("DELETE FROM wishes WHERE id = ?", [req.params.id], function(err, result) {
+    if (err) {
+      // If an error occurred, send a generic server faliure
+      return res.status(500).end();
+    } else if (result.affectedRows == 0) {
+      // If no rows were changed, then the ID must not exist, so 404
+      return res.status(404).end();
+    } else {
+      res.status(200).end();
+    }
+  });
+});
+
+
+
 
 
 
