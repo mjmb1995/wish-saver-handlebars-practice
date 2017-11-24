@@ -1,7 +1,5 @@
 <h1>Wish List</h1>
 
-<h3>Save the wishes you need to ask for later</h3>
-
 <ul>
   {{#each wishes}}
   	<li>
@@ -13,10 +11,10 @@
 </ul>
 
 <h2>Make a Wish</h2>
-<form action="/" method="POST">
-	<textarea type="text" name="wishes"></textarea>
+<form id="createwish" class="button-size">
+	<textarea type="text" name="wish"></textarea>
 
-	<button type="submit">Submit</button>
+	<button type="submit">Make a wish!</button>
 </form>
 
 
@@ -27,7 +25,7 @@
 			<option value="{{this.id}}">{{this.wish}}</option>
 		{{/each}}
 	</select>
-  <textarea type="text" name="wishes" placeholder="wish"></textarea>
+  <textarea type="text" name="wish" placeholder="wish"></textarea>
   <button type="submit">Update Wish!</button>
 </form>
 
@@ -38,7 +36,7 @@
     var id = $(this).data("wishid");
 
     // Send the DELETE request.
-    $.ajax("/" + id, {
+    $.ajax("/wish/" + id, {
       type: "DELETE"
     }).then(
       function() {
@@ -49,6 +47,29 @@
     );
   });
 
+  
+  $("#createwish").on("submit", function(event) {
+    // Make sure to preventDefault on a submit event.
+    event.preventDefault();
+
+    var newWish = {
+      wish: $("#createwish [name=wish]").val().trim()
+    };
+
+    // Send the POST request.
+    $.ajax("/wish", {
+      type: "POST",
+      data: newWish
+    }).then(
+      function() {
+        console.log("created new wish");
+        // Reload the page to get the updated list
+        location.reload();
+      }
+    );
+  });
+
+
   $("#updatewish").on("submit", function(event) {
     // Make sure to preventDefault on a submit event.
     event.preventDefault();
@@ -56,11 +77,11 @@
     var id = $("[name=id]").val().trim();
 
     var updatedWish = {
-      plan: $("#updatewish [name=wishes]").val().trim()
+      wish: $("#updatewish [name=wish]").val().trim()
     };
 
     // Send the PUT request.
-    $.ajax("/" + id, {
+    $.ajax("/wish/" + id, {
       type: "PUT",
       data: updatedWish
     }).then(

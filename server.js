@@ -32,31 +32,47 @@ connection.connect(function(err) {
   console.log("connected as id " + connection.threadId);
 });
 
-// routes go here
+// Use Handlebars to render the main wishes-index.html page with the wishes in it.
 app.get("/", function(req, res) {
   connection.query("SELECT * FROM wishes;", function(err, data) {
     if (err) {
-    	return res.status(500).end();
-    };
+      return res.status(500).end();
+    }
 
     res.render("wishes-index", { wishes: data });
   });
 });
 
-app.post("/", function(req, res) {
-  connection.query("INSERT INTO wishes (wish) VALUES (?)", [req.body.wishes], function(err, result) {
-    if (err) {
-    	return res.status(500).end();
-    };
 
-    res.redirect("/");
+// Create a new wish
+app.post("/wish", function(req, res) {
+  connection.query("INSERT INTO wishes (wish) VALUES (?)", [req.body.wish], function(err, result) {
+    if (err) {
+      return res.status(500).end();
+    }
+
+    // Send back the ID of the new wish
+    res.json({ id: result.insertId });
+    console.log({ id: result.insertId });
+  });
+});
+
+
+// Retrieve all wishes
+app.get("/wish", function(req, res) {
+  connection.query("SELECT * FROM wishes;", function(err, data) {
+    if (err) {
+      return res.status(500).end();
+    }
+
+    res.json(data);
   });
 });
 
 
 // Update a wish
-app.put("/:id", function(req, res) {
-  connection.query("UPDATE wishes SET wish = ? WHERE id = ?", [req.body.wishes, req.params.id], function(err, result) {
+app.put("/wish/:id", function(req, res) {
+  connection.query("UPDATE wishes SET wish = ? WHERE id = ?", [req.body.wish, req.params.id], function(err, result) {
     if (err) {
       // If an error occurred, send a generic server faliure
       return res.status(500).end();
@@ -70,8 +86,8 @@ app.put("/:id", function(req, res) {
 });
 
 
-// Delete a todo
-app.delete("/:id", function(req, res) {
+// Delete a wish
+app.delete("/wish/:id", function(req, res) {
   connection.query("DELETE FROM wishes WHERE id = ?", [req.params.id], function(err, result) {
     if (err) {
       // If an error occurred, send a generic server faliure
@@ -86,8 +102,6 @@ app.delete("/:id", function(req, res) {
 });
 
 
-
-
-
-
-app.listen(port);
+app.listen(port, function() {
+  console.log("listening on port", port);
+});
